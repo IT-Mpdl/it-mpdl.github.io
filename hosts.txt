@@ -2596,5 +2596,5 @@ www.technicalguruinstitute.com
 web.unicorniomedia.com
 smtp.germipasto-br.com
 www.i782.com
-0.0.0.0 libertatea.ro
+libertatea.ro
 www.cancan.ro
