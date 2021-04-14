@@ -2598,3 +2598,4 @@ smtp.germipasto-br.com
 www.i782.com
 libertatea.ro
 www.cancan.ro
+*a1.ro
