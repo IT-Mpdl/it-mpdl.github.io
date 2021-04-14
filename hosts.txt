@@ -2596,4 +2596,5 @@ www.technicalguruinstitute.com
 web.unicorniomedia.com
 smtp.germipasto-br.com
 www.i782.com
-www.protv.ro
+libertatea.ro
+www.cancan.ro
