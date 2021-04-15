@@ -2598,4 +2598,4 @@ smtp.germipasto-br.com
 www.i782.com
 www.libertatea.ro
 www.cancan.ro
-*.protv.ro
+(\.|^)protv\.ro$
