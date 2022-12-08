@@ -3013,7 +3013,6 @@ mautic.linguistic-trans.com
 surveys.ipsosinteractive.com
 track.rhetorik.com
 www.schcd.mn
-notebooks-for-global.world
 www.pupo.tv
 www.chemway.com.cn
 allshade.gr
