@@ -1,4 +1,4 @@
 MAILTO=jost@mpdl.mpg.de
 
-*/5 * * * * root /root/graylog-notification/process-graylog-notification.sh -d /var/www/local/json-queue -g /root/graylog-notification/testgraylog -e evilIPs.lst > /dev/null
+*/5 * * * * root /root/graylog-notification/process-graylog-notification.sh -d /var/www/local/json-queue -g /root/graylog-notification/it-mpdl.github.io -e evil_IPs.txt > /dev/null
 
