@@ -505,10 +505,17 @@ function main() {
     # Exit if there is nothing to do (no new graylog messages)
     if [[ ${#files} -le 0 ]]; then exit 0; fi
 
-    # Extract uniq list of evil IPs
+    # Extract uniq list of evil IPs without user
     ips=$(jq '.backlog[].message' $files | egrep -i 'authentication.*rejected' | egrep -i '\*\*\*\*\*' | sed 's/^.* : user IP = \(.\+\)"$/\1/;s/^.*User.* IP <\([^<>]\+\)> Authentication: rejected.*$/\1/' | sort -nu)
 
-    # Add evil IP to list, if they are not already present
+    # Extract uniq list of evil IPs with user
+    ips_usr=$(jq '.backlog[].message' $files | egrep -i 'authentication.*rejected' | egrep -iv '\*\*\*\*\*' | sed 's/^.* : user IP = \(.\+\)"$/\1/;s/^.*User.* IP <\([^<>]\+\)> Authentication: rejected.*$/\1/' | sort -nu)
+    # Send email about evil IPs with user, but don't block them
+    if [[ -n $ips_usr ]]; then
+      echo $ips_usr | fold -sw 16 | mail -s "WARNING: Found evil IPs with user, not blocking" -r graylog-warn@mpdl.mpg.de it@mpdl.mpg.de
+    fi
+
+    # Add evil IPs without user to list, if they are not already present
     added_ips=()
     for ip in $ips; do
       if ! grep -qw "$ip" $evil; then
