@@ -506,7 +506,7 @@ function main() {
     if [[ ${#files} -le 0 ]]; then exit 0; fi
 
     # Extract uniq list of evil IPs
-    ips=$(jq '.backlog[].message' $files | egrep -i 'authentication.*rejected' | sed 's/^.* : user IP = \(.\+\)"$/\1/;s/^.*User.* IP <\([^<>]\+\)> Authentication: rejected.*$/\1/' | sort -nu)
+    ips=$(jq '.backlog[].message' $files | egrep -i 'authentication.*rejected' | egrep -i '\*\*\*\*\*' | sed 's/^.* : user IP = \(.\+\)"$/\1/;s/^.*User.* IP <\([^<>]\+\)> Authentication: rejected.*$/\1/' | sort -nu)
 
     # Add evil IP to list, if they are not already present
     added_ips=()
