@@ -530,7 +530,7 @@ function main() {
       msg=$(echo $added_ips | fold -sw 60)
       git add $evil
       git commit -m "Added: $msg"
-      git push
+      git push --quiet
       logger -t $0 -p local0.info "Added evil IPs: $added_ips"
     else
       logger -t $0 -p local0.info "No new evil IPs found"
