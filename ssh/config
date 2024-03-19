@@ -1,0 +1,7 @@
+Host gitlab.gwdg.de
+  IdentityFile ~/.ssh/gitlab
+
+Host github.com
+  Hostname 140.82.121.4
+  IdentityFile ~/.ssh/gitlab
+  GlobalKnownHostsFile ~/.ssh/known_hosts_github
