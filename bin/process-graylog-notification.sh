@@ -497,7 +497,7 @@ function main() {
     cd $gitDir
 
     # git pull
-    git pull
+    git pull --quiet
 
     # Get a list of current json files
     files=$(ls -1tr $notifyDir/gln_*.json 2> /dev/null | paste -sd' ')
