@@ -506,7 +506,7 @@ function main() {
     if [[ ${#files} -le 0 ]]; then exit 0; fi
 
     # Extract uniq list of evil IPs without user
-    ips=$(jq '.backlog[].message' $files | egrep -i 'authentication.*rejected' | egrep  'User <*{5}|user = *{5}' | sed 's/^.* : user IP = \(.\+\)"$/\1/;s/^.*User.* IP <\([^<>]\+\)> Authentication: rejected.*$/\1/' | sort -nu)
+    ips=$(jq '.backlog[].message' $files | sed -n '/authentication Rejected.*user = \*\+/p;/User <\*\+> IP .*Authentication: rejected/p' | sed 's/^.* : user IP = \(.\+\)"$/\1/;s/^.*User.* IP <\([^<>]\+\)> Authentication: rejected.*$/\1/' | sort -nu)
 
     # Extract uniq list of evil IPs with user
     ips_usr=$(jq '.backlog[].message' $files | sed -n '/authentication Rejected.*user = \w\+/p;/User <\w\+> IP .*Authentication: rejected/p' | sed 's/^.* user = \(\w\+\) : user IP = \(.\+\)"$/\2\t\1/;s/^.*User <\([^<>]\+\)> IP <\([^<>]\+\)> Authentication: rejected.*$/\2\t\1/' | sort -nu)
