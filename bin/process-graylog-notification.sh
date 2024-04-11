@@ -499,41 +499,49 @@ function main() {
     # git pull
     git pull --quiet
 
-    # Get a list of current json files
-    files=$(ls -1tr $notifyDir/gln_*.json 2> /dev/null | paste -sd' ')
+    # Get a list of current json files (with prefix gln_ written by webserver and POSTed by graylog)
+    files=$(ls -1tr $notifyDir/gln_*.json 2> /dev/null || true | paste -sd' ')
 
-    # Exit if there is nothing to do (no new graylog messages)
-    if [[ ${#files} -le 0 ]]; then exit 0; fi
+    # Only extract IPs if gln_*.json files are found
+    if [[ ${#files} -gt 0 ]]; then
 
-    # Extract uniq list of evil IPs without user
-    ips=$(jq '.backlog[].message' $files | sed -n '/authentication Rejected.*user = \*\+/p;/User <\*\+> IP .*Authentication: rejected/p' | sed 's/^.* : user IP = \(.\+\)"$/\1/;s/^.*User.* IP <\([^<>]\+\)> Authentication: rejected.*$/\1/' | sort -nu)
+      # Extract uniq list of evil IPs without user
+      ips=$(jq '.backlog[].message' $files | sed -n '/authentication Rejected.*user = \*\+/p;/User <\*\+> IP .*Authentication: rejected/p' | sed 's/^.* : user IP = \(.\+\)"$/\1/;s/^.*User.* IP <\([^<>]\+\)> Authentication: rejected.*$/\1/' | sort -nu)
 
-    # Extract uniq list of evil IPs with user
-    ips_usr=$(jq '.backlog[].message' $files | sed -n '/authentication Rejected.*user = \w\+/p;/User <\w\+> IP .*Authentication: rejected/p' | sed 's/^.* user = \(\w\+\) : user IP = \(.\+\)"$/\2\t\1/;s/^.*User <\([^<>]\+\)> IP <\([^<>]\+\)> Authentication: rejected.*$/\2\t\1/' | sort -nu)
+      # Extract uniq list of evil IPs with user
+      ips_usr=$(jq '.backlog[].message' $files | sed -n '/authentication Rejected.*user = \w\+/p;/User <\w\+> IP .*Authentication: rejected/p' | sed 's/^.* user = \(\w\+\) : user IP = \(.\+\)"$/\2\t\1/;s/^.*User <\([^<>]\+\)> IP <\([^<>]\+\)> Authentication: rejected.*$/\2\t\1/' | sort -nu)
 
-    # Send email about evil IPs with user, but don't block them
-    if [[ -n $ips_usr ]]; then
-      echo $ips_usr | fold -sw 32 | mail -s "WARNING: Found evil IPs with user, not blocking" -r graylog-warn@mpdl.mpg.de it@mpdl.mpg.de
+      # Send email about evil IPs with user, but don't block them
+      if [[ -n $ips_usr ]]; then
+        echo $ips_usr | fold -sw 32 | mail -s "WARNING: Found evil IPs with user, not blocking" -r graylog-warn@mpdl.mpg.de it@mpdl.mpg.de
+      fi
+
+      # Add evil IPs without user to list, if they are not already present
+      added_ips=()
+      for ip in $ips; do
+        if ! grep -qw "$ip" $evil; then
+          echo "$ip" >> $evil
+          added_ips+="$ip, "
+        fi
+      done
+
     fi
 
-    # Add evil IPs without user to list, if they are not already present
-    added_ips=()
-    for ip in $ips; do
-      if ! grep -qw "$ip" $evil; then
-        echo "$ip" >> $evil
-	added_ips+="$ip, "
-      fi
-    done
+    # Always update md5 sum file, in case evil IPs have been added or the evil IPs list has been changed in the upstream repo
+    md5sum $evil | cut -d' ' -f1 > ${evil}.md5
 
     # If evil IPs have been added, then git add, commit and push
     if [[ -n ${added_ips-} ]]; then
       msg=$(echo $added_ips | fold -sw 60)
+    fi
+
+    # git add $evil and ${evil}.md5 if they have been modified
+    if git status -s | grep -q '^\s*M'; then
       git add $evil
-      git commit -m "Added: $msg"
+      git add ${evil}.md5
+      git commit -m "Updated MD5 file and/or added evil IPs: $msg"
       git push --quiet
-      logger -t $0 -p local0.info "Added evil IPs: $added_ips"
-    else
-      logger -t $0 -p local0.info "No new evil IPs found"
+      logger -t $0 -p local0.info "Updated MD5 file and/or added evil IPs: $msg"
     fi
 
     # Clean up json files examined in this run
