@@ -530,6 +530,9 @@ function main() {
     # Always update md5 sum file, in case evil IPs have been added or the evil IPs list has been changed in the upstream repo
     md5sum $evil | cut -d' ' -f1 > ${evil}.md5
 
+    # Default message for commit to avoid unbound variable error
+    msg="MD5 update only ( this usually means a manual edit of $evil )"
+
     # If evil IPs have been added, then git add, commit and push
     if [[ -n ${added_ips-} ]]; then
       msg=$(echo $added_ips | fold -sw 60)
