@@ -2734,7 +2734,6 @@ sgp1.digitaloceanspaces.com
 www.olansiawpurifier.com
 hondetec.en.alibaba.com
 www.lightinthebox.com
-wwwapps.ups.com
 castellumsoft.com
 bjcobtec.com
 tinyurl.com
