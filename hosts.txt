@@ -1,3 +1,7 @@
+putty.org
+vvinscp.net
+puutty.org
+wnscp.net
 khayamclinic.com
 radicalmedia.cl
 u34011402.ct.sendgrid.net
