@@ -1,4 +1,5 @@
 putty.org
+puutty.org
 vvinscp.net
 puutty.org
 wnscp.net
