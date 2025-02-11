@@ -1,6 +1,6 @@
+onedrive-files.mos.ap-southeast-2.sufybkt.com/
 administrator-webmail.mos.ap-southeast-2.sufybkt.com
 papahack.es
-*.sufybkt.com
 rebrand.ly
 webmail-servererrors9938.mos.ap-southeast-2.sufybkt.com
 www.cezdistribuce.cz
