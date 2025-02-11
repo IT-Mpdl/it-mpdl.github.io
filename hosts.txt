@@ -1,6 +1,6 @@
 administrator-webmail.mos.ap-southeast-2.sufybkt.com
 papahack.es
-sufybkt.com
+*.sufybkt.com
 rebrand.ly
 webmail-servererrors9938.mos.ap-southeast-2.sufybkt.com
 www.cezdistribuce.cz
