@@ -505,8 +505,8 @@ function main() {
     # Only extract IPs if gln_*.json files are found
     if [[ ${#files} -gt 0 ]]; then
 
-      # Extract uniq list of evil IPs without user
-      ips=$(jq '.backlog[].message' $files | sed -n '/authentication Rejected.*user = \*\+/p;/User <\*\+> IP .*Authentication: rejected/p' | sed 's/^.* : user IP = \(.\+\)"$/\1/;s/^.*User.* IP <\([^<>]\+\)> Authentication: rejected.*$/\1/' | sort -nu)
+      # Extract uniq list of evil IPs without user, ignoring server IPs 10.100.10.40 and 10.100.10.48 (privacyidea|edumfa).int.mpdl.mpg.de
+      ips=$(jq '.backlog[].message' $files | sed -n '/authentication Rejected.*user = \*\+/p;/User <\*\+> IP .*Authentication: rejected/p' | sed '/server\s*=\s*10\.100\.10\.4[08]/d' | sed 's/^.* : user IP = \(.\+\)"$/\1/;s/^.*User.* IP <\([^<>]\+\)> Authentication: rejected.*$/\1/' | sort -nu)
 
       # Extract uniq list of evil IPs with user
       ips_usr=$(jq '.backlog[].message' $files | sed -n '/authentication Rejected.*user = \w\+/p;/User <\w\+> IP .*Authentication: rejected/p' | sed 's/^.* user = \(\w\+\) : user IP = \(.\+\)"$/\2\t\1/;s/^.*User <\([^<>]\+\)> IP <\([^<>]\+\)> Authentication: rejected.*$/\2\t\1/' | sort -nu)
@@ -519,11 +519,6 @@ function main() {
       # Add evil IPs without user to list, if they are not already present
       added_ips=()
       for ip in $ips; do
-	# ignore privacyidea.int.mpdl.mpg.de and edumfa.int.mpdl.mpg.de.
-        if [ "$ip" = "10.100.10.40" ] || [ "$ip" = "10.100.10.48" ]; then
-	  continue
-	fi
-	# add IP to evil IPs list, if it is not already on the list
         if ! grep -qw "$ip" $evil; then
           echo "$ip" >> $evil
           added_ips+="$ip, "
