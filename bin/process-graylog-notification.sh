@@ -519,6 +519,11 @@ function main() {
       # Add evil IPs without user to list, if they are not already present
       added_ips=()
       for ip in $ips; do
+	# ignore privacyidea.int.mpdl.mpg.de and edumfa.int.mpdl.mpg.de.
+        if [ "$ip" = "10.100.10.40" ] || [ "$ip" = "10.100.10.48" ]; then
+	  continue
+	fi
+	# add IP to evil IPs list, if it is not already on the list
         if ! grep -qw "$ip" $evil; then
           echo "$ip" >> $evil
           added_ips+="$ip, "
