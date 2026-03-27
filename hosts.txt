@@ -1,3 +1,8 @@
+login.microsoft=nline.com
+login.microsoftonline.com
+microsoftonline.com
+saicares.=om
+saicares.com
 119.126.223.35.bc.googleusercontent.com
 core.005ban=.com
 u19109212.ct.sendgrid.net
