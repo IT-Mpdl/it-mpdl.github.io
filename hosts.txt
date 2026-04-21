@@ -3,7 +3,6 @@ woerking.ch
 h=im-de.unaux.com/
 dondtf.cl
 login.microsoft=nline.com
-login.microsoftonline.com
 microsoftonline.com
 saicares.=om
 saicares.com
