@@ -1,3 +1,4 @@
+v=rify-host-72.s3.us-west-1.amazonaws.com
 f.abbruchberlin.com
 u106898146.ct.eu.sendgrid.net
 woerking.ch
